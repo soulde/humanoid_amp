@@ -8,6 +8,9 @@ version = "0.1.0"
 description = "Humanoid AMP tasks and utilities for Isaac Lab"
 readme = "README.md"
 requires-python = ">=3.10"
+dependencies = [
+  "skrl>=2.0.0"
+]
 authors = [
   { name = "Unitree Robotics Hobbyist" }
 ]
