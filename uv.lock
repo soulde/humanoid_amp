@@ -7,6 +7,11 @@ resolution-markers = [
     "python_full_version < '3.11'",
 ]
 
+[manifest]
+members = [
+    "humanoid-amp",
+]
+
 [[package]]
 name = "absl-py"
 version = "2.5.0"
@@ -124,7 +129,7 @@ wheels = [
 [[package]]
 name = "humanoid-amp"
 version = "0.1.0"
-source = { editable = "." }
+source = { editable = "source/humanoid_amp" }
 dependencies = [
     { name = "skrl" },
 ]

@@ -46,6 +46,18 @@ class G1AmpEnvCfg(DirectRLEnvCfg):
 
     motion_file: str = MISSING
     reference_body = "pelvis"
+    key_body_names = [
+        "left_shoulder_pitch_link",
+        "right_shoulder_pitch_link",
+        "left_elbow_link",
+        "right_elbow_link",
+        "right_hip_yaw_link",
+        "left_hip_yaw_link",
+        "right_rubber_hand",
+        "left_rubber_hand",
+        "right_ankle_roll_link",
+        "left_ankle_roll_link",
+    ]
     reset_strategy = "random"  # default, random, random-start
     """Strategy to be followed when resetting each environment (humanoid's pose and joint states).
 

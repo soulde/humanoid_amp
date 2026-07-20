@@ -1,0 +1,22 @@
+[package]
+
+version = "0.1.0"
+category = "isaaclab"
+readme = "README.md"
+title = "Humanoid AMP"
+author = "soulde"
+maintainer = "soulde"
+description = "Humanoid adversarial motion prior tasks for Isaac Lab"
+repository = "https://github.com/soulde/humanoid_amp"
+keywords = ["extension", "isaaclab", "humanoid", "amp", "skrl"]
+
+[dependencies]
+"isaaclab" = {}
+"isaaclab_assets" = {}
+"isaaclab_rl" = {}
+"isaaclab_tasks" = {}
+
+[[python.module]]
+name = "humanoid_amp"
+
+[isaac_lab_settings]

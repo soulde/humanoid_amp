@@ -1,34 +1,22 @@
-[build-system]
-requires = ["setuptools>=65.0"]
-build-backend = "setuptools.build_meta"
+[tool.uv.workspace]
+members = ["source/humanoid_amp"]
 
-[project]
-name = "humanoid-amp"
-version = "0.1.0"
-description = "Humanoid AMP tasks and utilities for Isaac Lab"
-readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-  "skrl>=2.0.0"
-]
-authors = [
-  { name = "Unitree Robotics Hobbyist" }
-]
-license = "BSD-3-Clause"
-classifiers = [
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.10",
-  "Operating System :: POSIX :: Linux"
-]
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = ["logs", ".venv", "_*", ".git"]
 
-[tool.setuptools]
-packages = ["humanoid_amp"]
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E402"]
 
-[tool.setuptools.package-dir]
-humanoid_amp = "."
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
 
-[tool.setuptools.package-data]
-humanoid_amp = [
-  "motions/**/*",
-  "usd/**/*"
-]
+[tool.pyright]
+include = ["source", "scripts"]
+typeCheckingMode = "basic"
+pythonVersion = "3.11"
+pythonPlatform = "Linux"
+reportMissingImports = "none"
+reportMissingModuleSource = "none"

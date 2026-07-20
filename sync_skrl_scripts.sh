@@ -4,6 +4,7 @@ set -euo pipefail
 
 BASE_URL="https://raw.githubusercontent.com/isaac-sim/IsaacLab/main/scripts/reinforcement_learning/skrl"
 FILES=(train.py play.py)
+DEST_DIR="scripts/skrl"
 
 fetch() {
   local url="$1"
@@ -13,8 +14,10 @@ fetch() {
 
 for name in "${FILES[@]}"; do
   url="${BASE_URL}/${name}"
+  dest="${DEST_DIR}/${name}"
   echo "Fetching ${url}"
-  fetch "${url}" "${name}"
+  fetch "${url}" "${dest}"
+  sed -i "/# PLACEHOLDER: Extension template/a import humanoid_amp.tasks  # noqa: F401" "${dest}"
 done
 
 echo "Done."

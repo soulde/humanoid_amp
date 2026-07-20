@@ -36,16 +36,7 @@ class G1AmpEnv(DirectRLEnv):
         self._motion_loader = MotionLoader(motion_file=self.cfg.motion_file, device=self.device)
 
         # DOF and key body indexes  
-        key_body_names = [ "left_shoulder_pitch_link",
-            "right_shoulder_pitch_link",
-            "left_elbow_link",
-            "right_elbow_link",
-            "right_hip_yaw_link",
-            "left_hip_yaw_link",
-            "right_rubber_hand",
-            "left_rubber_hand",
-            "right_ankle_roll_link",
-            "left_ankle_roll_link"]
+        key_body_names = self.cfg.key_body_names
 
         self.ref_body_index = self.robot.data.body_names.index(self.cfg.reference_body)
         self.key_body_indexes = [self.robot.data.body_names.index(name) for name in key_body_names]
@@ -183,7 +174,7 @@ class G1AmpEnv(DirectRLEnv):
         ) = self._motion_loader.sample(num_samples=num_samples, times=times)
 
         # get root transforms (the humanoid torso)
-        motion_torso_index = self._motion_loader.get_body_index(["pelvis"])[0]
+        motion_torso_index = self._motion_loader.get_body_index([self.cfg.reference_body])[0]
         root_state = self.robot.data.default_root_state[env_ids].clone()
         root_state[:, 0:3] = body_positions[:, motion_torso_index] + self.scene.env_origins[env_ids]
         root_state[:, 2] += 0.05  # lift the humanoid slightly to avoid collisions with the ground

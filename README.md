@@ -18,10 +18,10 @@ This project requires Isaac Sim and Isaac Lab installed via pip. If you haven't 
 
 No symbolic links or special setup required! This project works as a standalone Isaac Lab extension.
 
-Install the repo in editable mode (mirrors the workflow used in unitree_rl_lab):
+Install the Isaac Lab extension in editable mode:
 
 ```bash
-pip install -e .
+/home/soulde/env_isaaclab/bin/pip install -e source/humanoid_amp
 ```
 
 We copy the train and play script from isaaclab, note you do not need to do it yourself.
@@ -33,25 +33,25 @@ bash ./sync_skrl_scripts.sh
 ## Train
 
 ```bash
-python -m humanoid_amp.train --task Isaac-G1-AMP-Walk-Direct-v0 --headless --num_envs 4096
+python scripts/skrl/train.py --task Isaac-G1-AMP-Walk-Direct-v0 --algorithm AMP --headless --num_envs 4096
 ```
 
 or for dance training:
 
 ```bash
-python -m humanoid_amp.train --task Isaac-G1-AMP-Dance-Direct-v0 --headless --num_envs 4096
+python scripts/skrl/train.py --task Isaac-G1-AMP-Dance-Direct-v0 --algorithm AMP --headless --num_envs 4096
 ```
 
 Additional training options:
 ```bash
 # Resume from checkpoint
-python -m humanoid_amp.train --task Isaac-G1-AMP-Walk-Direct-v0 --checkpoint logs/skrl/path/to/checkpoint
+python scripts/skrl/train.py --task Isaac-G1-AMP-Walk-Direct-v0 --algorithm AMP --checkpoint logs/skrl/path/to/checkpoint
 ```
 
 ## Eval
 
 ```bash
-python -m humanoid_amp.play --task Isaac-G1-AMP-Walk-Direct-v0 --num_envs 32 --checkpoint logs/skrl/<run>/checkpoints/Latest.ckpt
+python scripts/skrl/play.py --task Isaac-G1-AMP-Walk-Direct-v0 --algorithm AMP --num_envs 32 --checkpoint logs/skrl/<run>/checkpoints/agent_50000.pt
 ```
 
 ## TensorBoard
@@ -61,6 +61,30 @@ python -m tensorboard.main --logdir logs/skrl/
 ```
 
 Then open your browser to http://localhost:6006
+
+## DR02-Pro asset
+
+The extension exports a 29-DoF DR02-Pro configuration using the finetuned
+position gains from `soulde_robot_zoo`:
+
+```python
+from humanoid_amp.assets import DR02_PRO_CFG
+
+robot_cfg = DR02_PRO_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+```
+
+URDF conversion output is isolated per user under
+`$TMPDIR/IsaacLab/dr02_pro`. `TMPDIR` is required and must point to a
+user-specific directory to prevent cross-user cache conflicts.
+
+The DR02-Pro AMP walk task expects a robot-specific motion file at
+`source/humanoid_amp/humanoid_amp/tasks/direct/humanoid_amp/motions/dr02_pro_walk.npz`.
+Once that file is available, train it with:
+
+```bash
+TMPDIR=/home/$USER/tmp python scripts/skrl/train.py \
+  --task Isaac-DR02-Pro-AMP-Walk-Direct-v0 --algorithm AMP --headless
+```
 
 Walk training: `master` branch. Dance training: **`dance`** branch.
 
