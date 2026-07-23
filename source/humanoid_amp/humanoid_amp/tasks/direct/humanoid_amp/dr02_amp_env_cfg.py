@@ -11,6 +11,11 @@ from .g1_amp_env_cfg import G1AmpEnvCfg, MOTIONS_DIR
 
 @configclass
 class DR02ProAmpEnvCfg(G1AmpEnvCfg):
+    # Small DR02-only task penalties. These remain weak relative to the AMP
+    # style reward and only discourage limit violations and sharp acceleration.
+    rew_joint_pos_limits = -0.1
+    rew_joint_acc_l2 = -2.5e-10
+
     robot = DR02_PRO_CFG.replace(prim_path="/World/envs/env_.*/Robot")
     reference_body = "base_link"
     key_body_names = [

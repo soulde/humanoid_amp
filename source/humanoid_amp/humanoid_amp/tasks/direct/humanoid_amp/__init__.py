@@ -72,7 +72,7 @@ gym.register(
 
 gym.register(
     id="Isaac-DR02-Pro-AMP-Walk-Direct-v0",
-    entry_point=f"{__name__}.g1_amp_env:G1AmpEnv",
+    entry_point=f"{__name__}.dr02_amp_env:DR02ProAmpEnv",
     disable_env_checker=True,
     kwargs={
         "env_cfg_entry_point": f"{__name__}.dr02_amp_env_cfg:DR02ProAmpWalkEnvCfg",
