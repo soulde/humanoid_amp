@@ -1,7 +1,9 @@
 # RSL-RL AMP development
 
 The ManagerBased AMP implementation uses an editable checkout of
-[`leggedrobotics/rsl_rl`](https://github.com/leggedrobotics/rsl_rl).
+[`soulde/rsl_rl`](https://github.com/soulde/rsl_rl). The official
+[`leggedrobotics/rsl_rl`](https://github.com/leggedrobotics/rsl_rl) repository
+is configured as the `upstream` remote.
 
 The compatibility baseline is RSL-RL `v5.0.1`:
 
@@ -12,14 +14,14 @@ The compatibility baseline is RSL-RL `v5.0.1`:
 The current AMP implementation tip is:
 
 ```text
-7b511b1
+7b511b1db872bcb60ff88830138ffb2163e94910
 ```
 
 Clone and install it into the Isaac Lab Python environment:
 
 ```bash
-git clone https://github.com/leggedrobotics/rsl_rl.git third_party/rsl_rl
-git -C third_party/rsl_rl switch -c feat/manager-based-amp v5.0.1
+git clone --branch feat/manager-based-amp https://github.com/soulde/rsl_rl.git third_party/rsl_rl
+git -C third_party/rsl_rl remote add upstream https://github.com/leggedrobotics/rsl_rl.git
 /home/soulde/env_isaaclab/bin/python -m pip install --no-deps -e third_party/rsl_rl
 ```
 
