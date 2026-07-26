@@ -39,18 +39,6 @@ KEY_BODY_NAMES = [
 
 AMP_FRAME_DIM = 101
 
-def amp_frame_params() -> dict:
-    """Create independent scene selectors for an AMP observation term."""
-    return {
-        "reference_body_cfg": SceneEntityCfg("robot", body_names=[REFERENCE_BODY]),
-        "key_bodies_cfg": SceneEntityCfg("robot", body_names=KEY_BODY_NAMES, preserve_order=True),
-        "joint_position_scale": 1.0,
-        "joint_velocity_scale": 0.05,
-        "root_linear_velocity_scale": 2.0,
-        "root_angular_velocity_scale": 0.25,
-    }
-
-
 @configclass
 class DR02AmpSceneCfg(InteractiveSceneCfg):
     """Flat-ground DR02 scene."""
@@ -127,7 +115,7 @@ class ObservationsCfg:
     class AmpCfg(ObsGroup):
         """One AMP state; RSL-RL forms explicit state transitions."""
 
-        frame = ObsTerm(func=mdp.amp_frame, params=amp_frame_params())
+        frame = ObsTerm(func=mdp.amp_frame)
 
         def __post_init__(self):
             self.enable_corruption = False

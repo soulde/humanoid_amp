@@ -14,7 +14,7 @@ class RslRlAmpAlgorithmCfg(RslRlPpoAlgorithmCfg):
 
     class_name: str = "AMP"
     discriminator_hidden_dims: list[int] = [1024, 512]
-    discriminator_activation: str = "relu"
+    discriminator_activation: str = "lrelu"
     discriminator_learning_rate: float = 5.0e-5
     discriminator_batch_size: int = 4096
     discriminator_updates: int = 4
@@ -23,6 +23,7 @@ class RslRlAmpAlgorithmCfg(RslRlPpoAlgorithmCfg):
     discriminator_gradient_penalty_scale: float = 5.0
     discriminator_weight_decay_scale: float = 1.0e-4
     amp_replay_buffer_size: int = 200_000
+    amp_reward_coef: float = 0.2
     task_reward_scale: float = 0.0
     style_reward_scale: float = 1.0
 
