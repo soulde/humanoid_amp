@@ -1,5 +1,7 @@
 """Manager-based DR02 AMP environment configuration."""
 
+import os
+
 import isaaclab.sim as sim_utils
 from isaaclab.assets import AssetBaseCfg
 from isaaclab.envs import ManagerBasedRLEnvCfg
@@ -17,6 +19,9 @@ from humanoid_amp.assets import DR02_PRO_CFG
 
 from . import mdp
 
+MOTIONS_DIR = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "../../direct/humanoid_amp/motions")
+)
 REFERENCE_BODY = "base_link"
 KEY_BODY_NAMES = [
     "left_shoulder_y_link",
@@ -122,17 +127,11 @@ class ObservationsCfg:
 
 @configclass
 class EventsCfg:
-    """Default reset events used before expert-motion reset is added."""
+    """Expert-motion reset events."""
 
-    reset_base = EventTerm(
-        func=mdp.reset_root_state_uniform,
+    reset_from_motion = EventTerm(
+        func=mdp.reset_from_expert_motion,
         mode="reset",
-        params={"pose_range": {}, "velocity_range": {}},
-    )
-    reset_joints = EventTerm(
-        func=mdp.reset_joints_by_offset,
-        mode="reset",
-        params={"position_range": (0.0, 0.0), "velocity_range": (0.0, 0.0)},
     )
 
 
@@ -162,6 +161,9 @@ class DR02ProAmpManagerEnvCfg(ManagerBasedRLEnvCfg):
     rewards: RewardsCfg = RewardsCfg()
     terminations: TerminationsCfg = TerminationsCfg()
     events: EventsCfg = EventsCfg()
+    motion_files: list[str] = [os.path.join(MOTIONS_DIR, "dr02_pro_walk.npz")]
+    reference_body: str = REFERENCE_BODY
+    key_body_names: list[str] = KEY_BODY_NAMES
 
     def __post_init__(self):
         self.decimation = 2
