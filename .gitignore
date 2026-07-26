@@ -5,3 +5,4 @@ logs/
 outputs/*
 *.egg-info
 ${data}/
+/third_party/rsl_rl/
