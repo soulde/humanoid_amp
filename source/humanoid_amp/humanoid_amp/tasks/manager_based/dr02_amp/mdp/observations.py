@@ -24,10 +24,14 @@ def amp_frame(
     root_linear_velocity_scale: float,
     root_angular_velocity_scale: float,
 ) -> torch.Tensor:
-    """Return the current online AMP frame."""
+    """Return the current online AMP frame, shared by all observation groups."""
+    simulation_step = env._sim_step_counter
+    if getattr(env, "_amp_frame_cache_step", None) == simulation_step:
+        return env._amp_frame_cache
+
     robot: Articulation = env.scene[reference_body_cfg.name]
     reference_body_id = reference_body_cfg.body_ids[0]
-    return build_amp_frame(
+    frame = build_amp_frame(
         robot.data.joint_pos,
         robot.data.joint_vel,
         robot.data.body_pos_w[:, reference_body_id],
@@ -40,3 +44,6 @@ def amp_frame(
         root_linear_velocity_scale=root_linear_velocity_scale,
         root_angular_velocity_scale=root_angular_velocity_scale,
     )
+    env._amp_frame_cache = frame
+    env._amp_frame_cache_step = simulation_step
+    return frame

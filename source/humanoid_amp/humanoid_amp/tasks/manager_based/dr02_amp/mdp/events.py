@@ -19,6 +19,10 @@ def reset_from_expert_motion(
     asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
 ) -> None:
     """Reset selected environments to random expert-motion states."""
+    # A reset changes state without advancing the simulation step. Invalidate
+    # the observation cache before ObservationManager computes reset outputs.
+    env._amp_frame_cache_step = None
+
     robot: Articulation = env.scene[asset_cfg.name]
     state, previous_amp_frame = env.motion_dataset.sample_reset_states(len(env_ids))
     reference_index = env.motion_dataset.body_names.index(env.cfg.reference_body)
