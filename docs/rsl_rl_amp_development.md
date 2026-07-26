@@ -12,7 +12,7 @@ The compatibility baseline is RSL-RL `v5.0.1`:
 The current AMP implementation tip is:
 
 ```text
-0f023ef
+7b511b1
 ```
 
 Clone and install it into the Isaac Lab Python environment:
