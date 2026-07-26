@@ -12,6 +12,7 @@ from isaaclab.managers import RewardTermCfg as RewTerm
 from isaaclab.managers import SceneEntityCfg
 from isaaclab.managers import TerminationTermCfg as DoneTerm
 from isaaclab.scene import InteractiveSceneCfg
+from isaaclab.sensors import ContactSensorCfg
 from isaaclab.terrains import TerrainImporterCfg
 from isaaclab.utils import configclass
 
@@ -67,10 +68,19 @@ class DR02AmpSceneCfg(InteractiveSceneCfg):
         debug_vis=False,
     )
     robot = DR02_PRO_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    contact_forces = ContactSensorCfg(
+        prim_path="{ENV_REGEX_NS}/Robot/.*",
+        history_length=1,
+        track_air_time=False,
+    )
     light = AssetBaseCfg(
         prim_path="/World/light",
         spawn=sim_utils.DomeLightCfg(intensity=2000.0, color=(0.75, 0.75, 0.75)),
     )
+
+    def __post_init__(self):
+        # Self-contact forces do not exist unless PhysX self-collisions are enabled.
+        self.robot.spawn.articulation_props.enabled_self_collisions = True
 
 
 @configclass
@@ -140,7 +150,19 @@ class RewardsCfg:
     """Task rewards mixed with AMP style reward by the RSL-RL algorithm."""
 
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.1)
-    joint_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=0.0)
+    joint_pos_limits = RewTerm(func=mdp.joint_pos_limits, weight=-0.1)
+    undesired_contacts = RewTerm(
+        func=mdp.undesired_contacts,
+        weight=-0.1,
+        params={
+            # Permit normal ground contact only on the terminal foot bodies.
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=["^(?!left_ankle_x_link$|right_ankle_x_link$).*$"],
+            ),
+            "threshold": 1.0,
+        },
+    )
 
 
 @configclass
