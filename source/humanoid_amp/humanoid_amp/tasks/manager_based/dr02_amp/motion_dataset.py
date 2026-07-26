@@ -71,6 +71,10 @@ class AmpMotionDataset:
     def amp_observation_dim(self) -> int:
         return 202
 
+    @property
+    def amp_state_dim(self) -> int:
+        return 101
+
     def _sample_motion_ids(self, num_samples: int) -> np.ndarray:
         return np.random.choice(self.num_motions, size=num_samples, p=self._sampling_probabilities)
 
@@ -140,19 +144,10 @@ class AmpMotionDataset:
         current_frame = self.build_frames(current)
         return torch.cat((previous_frame, current_frame), dim=-1)
 
-    def sample_reset_states(self, num_samples: int) -> tuple[MotionState, torch.Tensor]:
-        """Sample reset states and the immediately preceding AMP frame."""
-        current, motion_ids, current_times = self.sample_states(num_samples)
-        previous_times = current_times.copy()
-        for motion_id, loader in enumerate(self.loaders):
-            mask = motion_ids == motion_id
-            previous_times[mask] -= loader.dt
-        previous, _, _ = self.sample_states(
-            num_samples,
-            motion_ids=motion_ids,
-            times=previous_times,
-        )
-        return current, self.build_frames(previous)
+    def sample_reset_states(self, num_samples: int) -> MotionState:
+        """Sample expert states used to initialize reset environments."""
+        current, _, _ = self.sample_states(num_samples)
+        return current
 
     def build_frames(self, state: MotionState) -> torch.Tensor:
         """Build one AMP frame from a batch of sampled motion states."""

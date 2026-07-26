@@ -38,7 +38,6 @@ KEY_BODY_NAMES = [
 ]
 
 AMP_FRAME_DIM = 101
-AMP_HISTORY_LENGTH = 2
 
 def amp_frame_params() -> dict:
     """Create independent scene selectors for an AMP observation term."""
@@ -87,11 +86,11 @@ class DR02AmpSceneCfg(InteractiveSceneCfg):
 class ActionsCfg:
     """DR02 action specifications."""
 
-    joint_pos = mdp.AmpJointPositionActionCfg(
+    joint_pos = mdp.JointPositionActionCfg(
         asset_name="robot",
         joint_names=[".*"],
-        scale=1.0,
-        use_default_offset=False,
+        scale=0.25,
+        use_default_offset=True,
     )
 
 
@@ -101,7 +100,11 @@ class ObservationsCfg:
 
     @configclass
     class PolicyCfg(ObsGroup):
-        frame = ObsTerm(func=mdp.amp_frame, params=amp_frame_params())
+        base_ang_vel = ObsTerm(func=mdp.base_ang_vel, scale=0.25)
+        projected_gravity = ObsTerm(func=mdp.projected_gravity)
+        joint_pos = ObsTerm(func=mdp.joint_pos_rel)
+        joint_vel = ObsTerm(func=mdp.joint_vel, scale=0.05)
+        previous_action = ObsTerm(func=mdp.last_action)
 
         def __post_init__(self):
             self.enable_corruption = False
@@ -109,7 +112,12 @@ class ObservationsCfg:
 
     @configclass
     class CriticCfg(ObsGroup):
-        frame = ObsTerm(func=mdp.amp_frame, params=amp_frame_params())
+        base_lin_vel = ObsTerm(func=mdp.base_lin_vel, scale=2.0)
+        base_ang_vel = ObsTerm(func=mdp.base_ang_vel, scale=0.25)
+        projected_gravity = ObsTerm(func=mdp.projected_gravity)
+        joint_pos = ObsTerm(func=mdp.joint_pos_rel)
+        joint_vel = ObsTerm(func=mdp.joint_vel, scale=0.05)
+        previous_action = ObsTerm(func=mdp.last_action)
 
         def __post_init__(self):
             self.enable_corruption = False
@@ -117,14 +125,9 @@ class ObservationsCfg:
 
     @configclass
     class AmpCfg(ObsGroup):
-        """Two chronological frames: previous, then current."""
+        """One AMP state; RSL-RL forms explicit state transitions."""
 
-        frame = ObsTerm(
-            func=mdp.amp_frame,
-            params=amp_frame_params(),
-            history_length=AMP_HISTORY_LENGTH,
-            flatten_history_dim=True,
-        )
+        frame = ObsTerm(func=mdp.amp_frame, params=amp_frame_params())
 
         def __post_init__(self):
             self.enable_corruption = False

@@ -24,7 +24,7 @@ def reset_from_expert_motion(
     env._amp_frame_cache_step = None
 
     robot: Articulation = env.scene[asset_cfg.name]
-    state, previous_amp_frame = env.motion_dataset.sample_reset_states(len(env_ids))
+    state = env.motion_dataset.sample_reset_states(len(env_ids))
     reference_index = env.motion_dataset.body_names.index(env.cfg.reference_body)
 
     root_pose = torch.cat(
@@ -49,4 +49,3 @@ def reset_from_expert_motion(
         state.joint_velocities,
         env_ids=env_ids,
     )
-    env.set_amp_reset_history(env_ids, previous_amp_frame)
