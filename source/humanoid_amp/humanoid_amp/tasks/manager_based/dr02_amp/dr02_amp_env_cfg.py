@@ -7,6 +7,7 @@ from isaaclab.managers import EventTermCfg as EventTerm
 from isaaclab.managers import ObservationGroupCfg as ObsGroup
 from isaaclab.managers import ObservationTermCfg as ObsTerm
 from isaaclab.managers import RewardTermCfg as RewTerm
+from isaaclab.managers import SceneEntityCfg
 from isaaclab.managers import TerminationTermCfg as DoneTerm
 from isaaclab.scene import InteractiveSceneCfg
 from isaaclab.terrains import TerrainImporterCfg
@@ -15,6 +16,34 @@ from isaaclab.utils import configclass
 from humanoid_amp.assets import DR02_PRO_CFG
 
 from . import mdp
+
+REFERENCE_BODY = "base_link"
+KEY_BODY_NAMES = [
+    "left_shoulder_y_link",
+    "right_shoulder_y_link",
+    "left_elbow_link",
+    "right_elbow_link",
+    "right_hip_z_link",
+    "left_hip_z_link",
+    "right_wrist_x_link",
+    "left_wrist_x_link",
+    "right_ankle_x_link",
+    "left_ankle_x_link",
+]
+
+AMP_FRAME_DIM = 101
+AMP_HISTORY_LENGTH = 2
+
+def amp_frame_params() -> dict:
+    """Create independent scene selectors for an AMP observation term."""
+    return {
+        "reference_body_cfg": SceneEntityCfg("robot", body_names=[REFERENCE_BODY]),
+        "key_bodies_cfg": SceneEntityCfg("robot", body_names=KEY_BODY_NAMES, preserve_order=True),
+        "joint_position_scale": 1.0,
+        "joint_velocity_scale": 0.05,
+        "root_linear_velocity_scale": 2.0,
+        "root_angular_velocity_scale": 0.25,
+    }
 
 
 @configclass
@@ -53,18 +82,42 @@ class ActionsCfg:
 
 @configclass
 class ObservationsCfg:
-    """Temporary policy observations, refined by the AMP observation commit."""
+    """Actor, critic and discriminator observation groups."""
 
     @configclass
     class PolicyCfg(ObsGroup):
-        joint_pos = ObsTerm(func=mdp.joint_pos)
-        joint_vel = ObsTerm(func=mdp.joint_vel)
+        frame = ObsTerm(func=mdp.amp_frame, params=amp_frame_params())
+
+        def __post_init__(self):
+            self.enable_corruption = False
+            self.concatenate_terms = True
+
+    @configclass
+    class CriticCfg(ObsGroup):
+        frame = ObsTerm(func=mdp.amp_frame, params=amp_frame_params())
+
+        def __post_init__(self):
+            self.enable_corruption = False
+            self.concatenate_terms = True
+
+    @configclass
+    class AmpCfg(ObsGroup):
+        """Two chronological frames: previous, then current."""
+
+        frame = ObsTerm(
+            func=mdp.amp_frame,
+            params=amp_frame_params(),
+            history_length=AMP_HISTORY_LENGTH,
+            flatten_history_dim=True,
+        )
 
         def __post_init__(self):
             self.enable_corruption = False
             self.concatenate_terms = True
 
     policy: PolicyCfg = PolicyCfg()
+    critic: CriticCfg = CriticCfg()
+    amp: AmpCfg = AmpCfg()
 
 
 @configclass

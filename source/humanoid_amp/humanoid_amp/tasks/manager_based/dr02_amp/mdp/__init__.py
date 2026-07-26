@@ -3,3 +3,4 @@
 from isaaclab.envs.mdp import *  # noqa: F401, F403
 
 from .actions import AmpJointPositionAction, AmpJointPositionActionCfg
+from .observations import amp_frame
