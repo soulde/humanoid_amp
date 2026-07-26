@@ -14,13 +14,13 @@ The compatibility baseline is RSL-RL `v5.0.1`:
 The current AMP implementation tip is:
 
 ```text
-7b511b1db872bcb60ff88830138ffb2163e94910
+87515260a68287fae356f1e1ba9405247beb4e9d
 ```
 
 Clone and install it into the Isaac Lab Python environment:
 
 ```bash
-git clone --branch feat/manager-based-amp https://github.com/soulde/rsl_rl.git third_party/rsl_rl
+git clone --branch dev https://github.com/soulde/rsl_rl.git third_party/rsl_rl
 git -C third_party/rsl_rl remote add upstream https://github.com/leggedrobotics/rsl_rl.git
 /home/soulde/env_isaaclab/bin/python -m pip install --no-deps -e third_party/rsl_rl
 ```
