@@ -9,6 +9,12 @@ The compatibility baseline is RSL-RL `v5.0.1`:
 3ac56acd3376f2952eb636a133f4b5aa30142552
 ```
 
+The current AMP implementation tip is:
+
+```text
+0f023ef
+```
+
 Clone and install it into the Isaac Lab Python environment:
 
 ```bash
