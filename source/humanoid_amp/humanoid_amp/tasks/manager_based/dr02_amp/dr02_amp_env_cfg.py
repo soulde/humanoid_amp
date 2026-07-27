@@ -66,8 +66,8 @@ class DR02AmpSceneCfg(InteractiveSceneCfg):
     )
 
     def __post_init__(self):
-        # Self-contact forces do not exist unless PhysX self-collisions are enabled.
-        self.robot.spawn.articulation_props.enabled_self_collisions = True
+        # Temporarily disable internal link-link collisions while tuning joint dynamics.
+        self.robot.spawn.articulation_props.enabled_self_collisions = False
 
 
 @configclass
