@@ -58,10 +58,12 @@ DR02_PRO_CFG = ArticulationCfg(
     ),
     init_state=ArticulationCfg.InitialStateCfg(
         pos=(0.0, 0.0, 0.95),
-        # Keep action=0 at the mechanical zero pose, except for a natural
-        # elbow bend. Patterns are disjoint to avoid ambiguous assignments.
+        # Keep action=0 near the mechanical zero pose, with the expert's
+        # symmetric shoulder yaw and a natural elbow bend.
         joint_pos={
-            "^(?!.*_elbow_joint$).*$": 0.0,
+            "^(?!.*(?:_elbow_joint|_shoulder_z_joint)$).*$": 0.0,
+            "left_shoulder_z_joint": 0.765,
+            "right_shoulder_z_joint": -0.765,
             ".*_elbow_joint": 1.25,
         },
         joint_vel={".*": 0.0},
