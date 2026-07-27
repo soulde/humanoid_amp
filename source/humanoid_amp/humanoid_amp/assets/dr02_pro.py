@@ -103,7 +103,7 @@ DR02_PRO_CFG = ArticulationCfg(
             saturation_effort=137.0,
             velocity_limit=19.38,
             stiffness=100.0,
-            damping=5.0,
+            damping=8.0,
             friction=0.0,
         ),
         "wrists": DCMotorCfg(
@@ -115,13 +115,22 @@ DR02_PRO_CFG = ArticulationCfg(
             damping=2.0,
             friction=0.0,
         ),
-        "leg_pitch_roll_knee": DCMotorCfg(
-            joint_names_expr=[".*_hip_[xy]_joint", ".*_knee_joint"],
+        "hip_pitch_roll": DCMotorCfg(
+            joint_names_expr=[".*_hip_[xy]_joint"],
             effort_limit=363.0,
             saturation_effort=363.0,
             velocity_limit=20.0,
             stiffness=300.0,
             damping=10.0,
+            friction=0.0,
+        ),
+        "knees": DCMotorCfg(
+            joint_names_expr=[".*_knee_joint"],
+            effort_limit=363.0,
+            saturation_effort=363.0,
+            velocity_limit=20.0,
+            stiffness=300.0,
+            damping=15.0,
             friction=0.0,
         ),
         "hip_yaw": DCMotorCfg(
