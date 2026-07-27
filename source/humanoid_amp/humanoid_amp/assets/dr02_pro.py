@@ -4,10 +4,11 @@ The model parameters match the official ``DeepRoboticsLab/deep_robotics_model``
 DR02-Pro asset at commit ``18192847``. The two neck joints remain fixed so the
 robot retains the 29 actuated DOFs used by the expert motion dataset.
 
-The upper-body explicit motor parameters preserve the official USD acceleration
-drive through ``torque_gain = drive_gain * JointEquivalentInertia``. The
-authored equivalent inertia is also applied as joint armature; omitting it makes
-the torque-controlled wrists numerically unstable.
+The upper-body explicit motor parameters are initialized from the official USD
+acceleration drive through ``torque_gain = drive_gain * JointEquivalentInertia``
+and tuned to symmetric integer gains. The authored equivalent inertia is applied
+as joint armature; omitting it makes the torque-controlled wrists numerically
+unstable.
 """
 
 import os
@@ -109,34 +110,20 @@ DR02_PRO_CFG = ArticulationCfg(
             saturation_effort=137.0,
             velocity_limit=19.38,
             stiffness={
-                "left_shoulder_y_joint": 416.468829,
-                "left_shoulder_x_joint": 331.228934,
-                "left_shoulder_z_joint": 328.911990,
-                "left_elbow_joint": 89.938641,
-                "right_shoulder_y_joint": 416.624956,
-                "right_shoulder_x_joint": 331.238732,
-                "right_shoulder_z_joint": 328.913890,
-                "right_elbow_joint": 89.848032,
+                ".*_shoulder_y_joint": 417.0,
+                ".*_shoulder_x_joint": 331.0,
+                ".*_shoulder_z_joint": 329.0,
+                ".*_elbow_joint": 90.0,
             },
             damping={
-                "left_shoulder_y_joint": 0.166588,
-                "left_shoulder_x_joint": 0.132492,
-                "left_shoulder_z_joint": 0.131565,
-                "left_elbow_joint": 0.035975,
-                "right_shoulder_y_joint": 0.166650,
-                "right_shoulder_x_joint": 0.132495,
-                "right_shoulder_z_joint": 0.131566,
-                "right_elbow_joint": 0.035939,
+                ".*_shoulder_[xyz]_joint": 10.0,
+                ".*_elbow_joint": 4.0,
             },
             armature={
-                "left_shoulder_y_joint": 0.6663501263,
-                "left_shoulder_x_joint": 0.5299662948,
-                "left_shoulder_z_joint": 0.5262591839,
-                "left_elbow_joint": 0.1439018250,
-                "right_shoulder_y_joint": 0.6665999293,
-                "right_shoulder_x_joint": 0.5299819708,
-                "right_shoulder_z_joint": 0.5262622237,
-                "right_elbow_joint": 0.1437568516,
+                ".*_shoulder_y_joint": 0.6664750278,
+                ".*_shoulder_x_joint": 0.5299741328,
+                ".*_shoulder_z_joint": 0.5262607038,
+                ".*_elbow_joint": 0.1438293383,
             },
             friction=0.0,
         ),
@@ -146,28 +133,18 @@ DR02_PRO_CFG = ArticulationCfg(
             saturation_effort=50.0,
             velocity_limit=23.76,
             stiffness={
-                "left_wrist_z_joint": 87.425597,
-                "left_wrist_y_joint": 14.705431,
-                "left_wrist_x_joint": 10.979477,
-                "right_wrist_z_joint": 87.332074,
-                "right_wrist_y_joint": 14.651639,
-                "right_wrist_x_joint": 10.925530,
+                ".*_wrist_z_joint": 87.0,
+                ".*_wrist_y_joint": 15.0,
+                ".*_wrist_x_joint": 11.0,
             },
             damping={
-                "left_wrist_z_joint": 0.034970,
-                "left_wrist_y_joint": 0.005882,
-                "left_wrist_x_joint": 0.004392,
-                "right_wrist_z_joint": 0.034933,
-                "right_wrist_y_joint": 0.005861,
-                "right_wrist_x_joint": 0.004370,
+                ".*_wrist_z_joint": 2.0,
+                ".*_wrist_[xy]_joint": 1.0,
             },
             armature={
-                "left_wrist_z_joint": 0.1398809552,
-                "left_wrist_y_joint": 0.0235286895,
-                "left_wrist_x_joint": 0.0175671633,
-                "right_wrist_z_joint": 0.1397313178,
-                "right_wrist_y_joint": 0.0234426223,
-                "right_wrist_x_joint": 0.0174808484,
+                ".*_wrist_z_joint": 0.1398061365,
+                ".*_wrist_y_joint": 0.0234856559,
+                ".*_wrist_x_joint": 0.0175240059,
             },
             friction=0.0,
         ),
