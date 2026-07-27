@@ -1,7 +1,13 @@
 """Deep Robotics DR02-Pro asset configuration.
 
-The joint gains and effort limits mirror the position actuators in the
-``soulde_robot_zoo`` DR02-Pro MJCF model (commit 57def56).
+The model parameters match the official ``DeepRoboticsLab/deep_robotics_model``
+DR02-Pro asset at commit ``18192847``. The two neck joints remain fixed so the
+robot retains the 29 actuated DOFs used by the expert motion dataset.
+
+The upper-body explicit motor parameters preserve the official USD acceleration
+drive through ``torque_gain = drive_gain * JointEquivalentInertia``. The
+authored equivalent inertia is also applied as joint armature; omitting it makes
+the torque-controlled wrists numerically unstable.
 """
 
 import os
@@ -102,8 +108,36 @@ DR02_PRO_CFG = ArticulationCfg(
             effort_limit=137.0,
             saturation_effort=137.0,
             velocity_limit=19.38,
-            stiffness=100.0,
-            damping=8.0,
+            stiffness={
+                "left_shoulder_y_joint": 416.468829,
+                "left_shoulder_x_joint": 331.228934,
+                "left_shoulder_z_joint": 328.911990,
+                "left_elbow_joint": 89.938641,
+                "right_shoulder_y_joint": 416.624956,
+                "right_shoulder_x_joint": 331.238732,
+                "right_shoulder_z_joint": 328.913890,
+                "right_elbow_joint": 89.848032,
+            },
+            damping={
+                "left_shoulder_y_joint": 0.166588,
+                "left_shoulder_x_joint": 0.132492,
+                "left_shoulder_z_joint": 0.131565,
+                "left_elbow_joint": 0.035975,
+                "right_shoulder_y_joint": 0.166650,
+                "right_shoulder_x_joint": 0.132495,
+                "right_shoulder_z_joint": 0.131566,
+                "right_elbow_joint": 0.035939,
+            },
+            armature={
+                "left_shoulder_y_joint": 0.6663501263,
+                "left_shoulder_x_joint": 0.5299662948,
+                "left_shoulder_z_joint": 0.5262591839,
+                "left_elbow_joint": 0.1439018250,
+                "right_shoulder_y_joint": 0.6665999293,
+                "right_shoulder_x_joint": 0.5299819708,
+                "right_shoulder_z_joint": 0.5262622237,
+                "right_elbow_joint": 0.1437568516,
+            },
             friction=0.0,
         ),
         "wrists": DCMotorCfg(
@@ -111,8 +145,30 @@ DR02_PRO_CFG = ArticulationCfg(
             effort_limit=50.0,
             saturation_effort=50.0,
             velocity_limit=23.76,
-            stiffness=90.0,
-            damping=2.0,
+            stiffness={
+                "left_wrist_z_joint": 87.425597,
+                "left_wrist_y_joint": 14.705431,
+                "left_wrist_x_joint": 10.979477,
+                "right_wrist_z_joint": 87.332074,
+                "right_wrist_y_joint": 14.651639,
+                "right_wrist_x_joint": 10.925530,
+            },
+            damping={
+                "left_wrist_z_joint": 0.034970,
+                "left_wrist_y_joint": 0.005882,
+                "left_wrist_x_joint": 0.004392,
+                "right_wrist_z_joint": 0.034933,
+                "right_wrist_y_joint": 0.005861,
+                "right_wrist_x_joint": 0.004370,
+            },
+            armature={
+                "left_wrist_z_joint": 0.1398809552,
+                "left_wrist_y_joint": 0.0235286895,
+                "left_wrist_x_joint": 0.0175671633,
+                "right_wrist_z_joint": 0.1397313178,
+                "right_wrist_y_joint": 0.0234426223,
+                "right_wrist_x_joint": 0.0174808484,
+            },
             friction=0.0,
         ),
         "hip_pitch_roll": DCMotorCfg(
