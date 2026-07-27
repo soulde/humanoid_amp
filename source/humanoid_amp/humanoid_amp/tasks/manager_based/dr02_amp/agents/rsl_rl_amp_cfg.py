@@ -23,7 +23,6 @@ class RslRlAmpAlgorithmCfg(RslRlPpoAlgorithmCfg):
     discriminator_gradient_penalty_scale: float = 5.0
     discriminator_weight_decay_scale: float = 1.0e-4
     amp_replay_buffer_size: int = 200_000
-    amp_reward_coef: float = 1.0
     task_reward_scale: float = 0.8
     style_reward_scale: float = 0.2
 

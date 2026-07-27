@@ -14,7 +14,7 @@ The compatibility baseline is RSL-RL `v5.0.1`:
 The current AMP implementation tip is:
 
 ```text
-7280a5e47d429549a4b1562fae37b1432e4569ba
+f3f378b37735bafe99cec7cb8530ad1e9a3ebe14
 ```
 
 Clone and install it into the Isaac Lab Python environment:
